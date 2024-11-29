@@ -20,6 +20,8 @@ void ACountdown::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UpdateTimerDisplay();
+	GetWorldTimerManager().SetTimer(CountdownTimerHandle, this, &ACountdown::AdvanceTimer, 1.0f, true);
 }
 
 // Called every frame
@@ -29,3 +31,23 @@ void ACountdown::Tick(float DeltaTime)
 
 }
 
+void ACountdown::AdvanceTimer()
+{
+	--CountdownTime;
+	UpdateTimerDisplay();
+	if (CountdownTime < 1)
+	{
+		GetWorldTimerManager().ClearTimer(CountdownTimerHandle);
+		CountdownHasFinished();
+	}
+}
+
+void ACountdown::UpdateTimerDisplay()
+{
+	CountdownText->SetText(FText::FromString(FString::FromInt(FMath::Max(CountdownTime, 0))));
+}
+
+void ACountdown::CountdownHasFinished()
+{
+	CountdownText->SetText(FText::FromString("GO!"));
+}

@@ -30,6 +30,11 @@ protected:
 
 	int32 CountdownTime;
 	UTextRenderComponent* CountdownText;
+
+	FTimerHandle CountdownTimerHandle;
+
+	void AdvanceTimer();
 	void UpdateTimerDisplay();
+	void CountdownHasFinished();
 
 };
