@@ -28,13 +28,19 @@ public:
 
 protected:
 
+	//Base duration value
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats")
 	int32 CountdownTime;
 	UTextRenderComponent* CountdownText;
 
 	FTimerHandle CountdownTimerHandle;
 
+	UFUNCTION(BlueprintNativeEvent)
+	void CountdownHasFinished();
+	virtual void CountdownHasFinished_Implementation();
+
 	void AdvanceTimer();
 	void UpdateTimerDisplay();
-	void CountdownHasFinished();
+
 
 };
