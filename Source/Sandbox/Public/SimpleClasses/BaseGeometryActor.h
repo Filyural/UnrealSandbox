@@ -24,5 +24,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	void TestExampleLog();
+	void TestExampleLog1();
+	void TestExampleLog2();
 };
