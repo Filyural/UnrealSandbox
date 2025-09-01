@@ -23,6 +23,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+
+	UPROPERTY(EditAnywhere, Category="Inventory")
+	int32 ActiveSlotsNumber = 17;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	int32 InventorySize = 21;
+
+	UPROPERTY(EditInstanceOnly, Category = "Health")
+	float Health = 7.3f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	bool bIsAlive = true;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	bool bCanSprint = Health >= 3.5f;
+
 private:
 	void TestExampleLog1();
 	void TestExampleLog2();

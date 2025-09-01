@@ -31,19 +31,14 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 
 void ABaseGeometryActor::TestExampleLog1()
 {
-	UE_LOG(LogTemp, Display, TEXT("Hello, Unreal!"));
-	UE_LOG(LogTemp, Warning, TEXT("Hello, Unreal!"));
-	UE_LOG(LogTemp, Error, TEXT("Hello, Unreal!"));
-
-	int InventorySize = 21;
-	int ActiveSlotsNumber = 17;
-	float Health = 7.3f;
-	bool bIsAlive = true;
-	bool bCanSprint = Health >= 3.5f;
-
-	UE_LOG(LogTemp, Warning, TEXT("Now you have %d from %i available inventory slots."), ActiveSlotsNumber, InventorySize);
-	UE_LOG(LogTemp, Warning, TEXT("Your health is %.2f. You are %s."), Health, *FString(bIsAlive ? "alive" : "dead"));
-	UE_LOG(LogTemp, Warning, TEXT("You %s sprint now!"), *FString(static_cast<int>(bCanSprint) ? "can" : "can't"));
+	//UE_LOG(LogTemp, Display, TEXT("Hello, Unreal!"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hello, Unreal!"));
+	//UE_LOG(LogTemp, Error, TEXT("Hello, Unreal!"));
+	
+	UE_LOG(LogBaseGeometry, Error, TEXT("Actor name: %s"), *GetName());
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Now you have %d from %i available inventory slots."), ActiveSlotsNumber, InventorySize);
+	UE_LOG(LogBaseGeometry, Warning, TEXT("Your health is %.2f. You are %s."), Health, *FString(bIsAlive ? "alive" : "dead"));
+	UE_LOG(LogBaseGeometry, Warning, TEXT("You %s sprint now!"), *FString(static_cast<int>(bCanSprint) ? "can" : "can't"));
 }
 
 void ABaseGeometryActor::TestExampleLog2()
