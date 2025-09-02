@@ -9,16 +9,19 @@
 #include "BaseGeometryActor.generated.h"
 
 UENUM(BlueprintType)
-enum ESimpleMovementType
+enum class ESimpleMovementType : uint8
 {
 	Sin,
 	Static
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FSimpleMovementData
 {
 	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	ESimpleMovementType MovementType = ESimpleMovementType::Static;
 
 	UPROPERTY(EditInstanceOnly)
 	float Amplitude = 50.0f;
@@ -46,8 +49,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	
-	UPROPERTY(EditInstanceOnly)
+
+	UPROPERTY(EditAnywhere, Category = "Movement Data")
 	FSimpleMovementData MovementData;
 
 	UPROPERTY(VisibleAnywhere)
@@ -75,4 +78,5 @@ private:
 	void TestExampleLog1();
 	void TestExampleLog2();
 	void TransformLog();
+	void MovementHandle();
 };

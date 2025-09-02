@@ -9,9 +9,9 @@ DEFINE_LOG_CATEGORY_STATIC(LogBaseGeometry, All, All);
 // Sets default values
 ABaseGeometryActor::ABaseGeometryActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
 	SetRootComponent(BaseMesh);
 }
@@ -34,13 +34,7 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector CurrentLocation = GetActorLocation();
-	const auto World = GetWorld();
-	if (!World) { return; }
-	float Time = World->GetTimeSeconds();
-	CurrentLocation.Z = InitialLocation.Z + MovementData.Amplitude * FMath::Sin(MovementData.Frequency * Time);
-	
-	SetActorLocation(CurrentLocation);
+	MovementHandle();
 }
 
 void ABaseGeometryActor::TestExampleLog1()
@@ -48,7 +42,7 @@ void ABaseGeometryActor::TestExampleLog1()
 	//UE_LOG(LogTemp, Display, TEXT("Hello, Unreal!"));
 	//UE_LOG(LogTemp, Warning, TEXT("Hello, Unreal!"));
 	//UE_LOG(LogTemp, Error, TEXT("Hello, Unreal!"));
-	
+
 	UE_LOG(LogBaseGeometry, Error, TEXT("Actor name: %s"), *GetName());
 	UE_LOG(LogBaseGeometry, Warning, TEXT("Now you have %d from %i available inventory slots."), ActiveSlotsNumber, InventorySize);
 	UE_LOG(LogBaseGeometry, Warning, TEXT("Your health is %.2f. You are %s."), Health, *FString(bIsAlive ? "alive" : "dead"));
@@ -90,5 +84,28 @@ void ABaseGeometryActor::TransformLog()
 	UE_LOG(LogBaseGeometry, Display, TEXT("Rotation: %s"), *Rotation.ToString());
 	UE_LOG(LogBaseGeometry, Display, TEXT("Scale: %s"), *Scale.ToString());
 	UE_LOG(LogBaseGeometry, Error, TEXT("f\nConvenient Transform:\n%s"), *Transform.ToHumanReadableString());
+
+}
+
+void ABaseGeometryActor::MovementHandle()
+{
+	switch (MovementData.MovementType)
+	{
+	case ESimpleMovementType::Sin:
+	{
+		FVector CurrentLocation = GetActorLocation();
+		const auto World = GetWorld();
+		if (!World) { return; }
+		float Time = World->GetTimeSeconds();
+		CurrentLocation.Z = InitialLocation.Z + MovementData.Amplitude * FMath::Sin(MovementData.Frequency * Time);
+
+		SetActorLocation(CurrentLocation);
+		break;
+	}
+	case ESimpleMovementType::Static:
+		break;
+	default:
+		break;
+	}
 
 }
