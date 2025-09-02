@@ -20,10 +20,7 @@ struct FSimpleMovementData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditInstanceOnly)
 	float Amplitude = 50.0f;
-
-	UPROPERTY(EditInstanceOnly)
 	float Frequency = 2.0f;
 
 };
