@@ -11,24 +11,29 @@
 UENUM(BlueprintType)
 enum class ESimpleMovementType : uint8
 {
-	Sin,
-	Static
+	Static,
+	Sin
 };
 
 USTRUCT(BlueprintType)
-struct FSimpleMovementData
+struct FSimpleData
 {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	ESimpleMovementType MovementType = ESimpleMovementType::Static;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditAnywhere, Category = "Design")
+	FLinearColor Color = FLinearColor::Black;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement", meta=(EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Amplitude = 50.0f;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "Movement", meta=(EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Frequency = 2.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Design", meta = (EditCondition = "MovementType == ESimpleMovementType::Static"))
+	float TimerRate = 3.0f;
 };
 
 UCLASS()
@@ -50,37 +55,44 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "Movement Data")
-	FSimpleMovementData MovementData;
-
+	//Components
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Design")
-	FLinearColor Color = FLinearColor::Black;
+	//BaseFields
+	UPROPERTY(EditAnywhere, Category = "Movement Data")
+	FSimpleData SimpleData;
 
-	UPROPERTY(EditAnywhere, Category="Inventory")
-	int32 ActiveSlotsNumber = 17;
+	UPROPERTY(EditAnywhere, Category = "Timer", meta=(ToolTip = "-1 equals infinity"))
+	int32 MaxTimerCount = 5;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	int32 InventorySize = 21;
+	//UPROPERTY(EditAnywhere, Category="Inventory")
+	//int32 ActiveSlotsNumber = 17;
 
-	UPROPERTY(EditInstanceOnly, Category = "Health")
-	float Health = 7.3f;
+	//UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	//int32 InventorySize = 21;
 
-	UPROPERTY(VisibleAnywhere, Category = "Health")
-	bool bIsAlive = true;
+	//UPROPERTY(EditInstanceOnly, Category = "Health")
+	//float Health = 7.3f;
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	bool bCanSprint = Health >= 3.5f;
+	//UPROPERTY(VisibleAnywhere, Category = "Health")
+	//bool bIsAlive = true;
+
+	//UPROPERTY(EditAnywhere, Category = "Movement")
+	//bool bCanSprint = Health >= 3.5f;
 
 private:
 
 	FVector InitialLocation;
+	FTimerHandle TimerHandle;
 
-	void TestExampleLog1();
-	void TestExampleLog2();
-	void TransformLog();
+	int32 CurrentTimerCount = 0;
+
+	//void TestExampleLog1();
+	//void TestExampleLog2();
+	//void TransformLog();
 	void MovementHandle();
-	void SetColor(FLinearColor& Color);
+	void SetColor(const FLinearColor& ColorToSet);
+
+	void OnTimerFired();
 };
