@@ -56,6 +56,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
+	UPROPERTY(EditAnywhere, Category = "Design")
+	FLinearColor Color = FLinearColor::Black;
+
 	UPROPERTY(EditAnywhere, Category="Inventory")
 	int32 ActiveSlotsNumber = 17;
 
@@ -79,4 +82,5 @@ private:
 	void TestExampleLog2();
 	void TransformLog();
 	void MovementHandle();
+	void SetColor(FLinearColor& Color);
 };
