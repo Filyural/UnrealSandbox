@@ -142,6 +142,7 @@ void ABaseGeometryActor::MovementHandle()
 void ABaseGeometryActor::SetColor(const FLinearColor& ColorToSet)
 {
 	InitialLocation = GetActorLocation();
+	if (!BaseMesh) { return; }
 	UMaterialInstanceDynamic* DynMat = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
 	if (DynMat)
 	{

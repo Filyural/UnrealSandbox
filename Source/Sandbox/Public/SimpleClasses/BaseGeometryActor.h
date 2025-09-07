@@ -26,10 +26,10 @@ struct FSimpleData
 	UPROPERTY(EditAnywhere, Category = "Design")
 	FLinearColor Color = FLinearColor::Black;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement", meta=(EditCondition = "MovementType == ESimpleMovementType::Sin"))
+	UPROPERTY(EditInstanceOnly, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Amplitude = 50.0f;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement", meta=(EditCondition = "MovementType == ESimpleMovementType::Sin"))
+	UPROPERTY(EditInstanceOnly, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Frequency = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Design", meta = (EditCondition = "MovementType == ESimpleMovementType::Static"))
@@ -40,8 +40,8 @@ UCLASS()
 class SANDBOX_API ABaseGeometryActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABaseGeometryActor();
 
@@ -49,7 +49,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	void SetSimpleData(const FSimpleData Data) { SimpleData = Data; }
+
+	FSimpleData& GetSimpleData() { return SimpleData; }
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -63,7 +68,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Movement Data")
 	FSimpleData SimpleData;
 
-	UPROPERTY(EditAnywhere, Category = "Timer", meta=(ToolTip = "-1 equals infinity"))
+	UPROPERTY(EditAnywhere, Category = "Timer", meta = (ToolTip = "-1 equals infinity"))
 	int32 MaxTimerCount = 5;
 
 	//UPROPERTY(EditAnywhere, Category="Inventory")
