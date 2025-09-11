@@ -52,4 +52,8 @@ protected:
 	void SpawnActorSingle(const FTransform& Transform, const FSimpleData& Data);
 	void SpawnActorSingleDeferred(const FTransform& Transform, const FSimpleData& Data);
 	void SpawnActorsArray();
+
+	UFUNCTION()
+	void OnColorChanged(const FLinearColor& Color, const FString& Name);
+	void OnTimerFinished(AActor* Actor);
 };

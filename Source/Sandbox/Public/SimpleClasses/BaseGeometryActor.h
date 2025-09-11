@@ -8,6 +8,9 @@
 
 #include "BaseGeometryActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChangedSignature, const FLinearColor&, Color, const FString&, Name);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinishedSignature, AActor*);
+
 UENUM(BlueprintType)
 enum class ESimpleMovementType : uint8
 {
@@ -20,20 +23,28 @@ struct FSimpleData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	ESimpleMovementType MovementType = ESimpleMovementType::Static;
 
-	UPROPERTY(EditAnywhere, Category = "Design")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Design")
 	FLinearColor Color = FLinearColor::Black;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Amplitude = 50.0f;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Movement", meta = (EditCondition = "MovementType == ESimpleMovementType::Sin"))
 	float Frequency = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Design", meta = (EditCondition = "MovementType == ESimpleMovementType::Static"))
 	float TimerRate = 3.0f;
+
+	FString ToString() const
+	{
+		FString MainStr = FString::Printf(TEXT(" \nMovementType: %s; Color: %s;\n"), *FString(MovementType == ESimpleMovementType::Static ? "Static" : "Sin"), *Color.ToString());
+		FString AdditionalStr = FString::Printf(TEXT("Amplitude: %.2f; Frequency: %.2f; TimeRate: %.2f;"), Amplitude, Frequency, TimerRate);
+
+		return MainStr + (MovementType == ESimpleMovementType::Static ? AdditionalStr : FString(""));
+	}
 };
 
 UCLASS()
@@ -48,12 +59,19 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 
-	void SetSimpleData(const FSimpleData Data) { SimpleData = Data; }
+	UPROPERTY(BlueprintAssignable)
+	FOnColorChangedSignature OnColorChanged;
 
-	FSimpleData& GetSimpleData() { return SimpleData; }
+	FOnTimerFinishedSignature OnTimerFinished;
+
+	void SetSimpleData(const FSimpleData& Data) { SimpleData = Data; }
+
+	UFUNCTION(BlueprintCallable)
+	FSimpleData GetSimpleData() const { return SimpleData; }
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -65,7 +83,7 @@ protected:
 	UStaticMeshComponent* BaseMesh;
 
 	//BaseFields
-	UPROPERTY(EditAnywhere, Category = "Movement Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Data")
 	FSimpleData SimpleData;
 
 	UPROPERTY(EditAnywhere, Category = "Timer", meta = (ToolTip = "-1 equals infinity"))

@@ -4,6 +4,8 @@
 #include "SimpleClasses/SimpleSpawner.h"
 #include "Engine/World.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSimpleSpawner, All, All)
+
 // Sets default values
 ASimpleSpawner::ASimpleSpawner()
 {
@@ -17,8 +19,8 @@ void ASimpleSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnActorSingle(FTransform(FRotator::ZeroRotator, FVector::ZeroVector), FSimpleData());
-	SpawnActorSingleDeferred(FTransform(FRotator::ZeroRotator, FVector::ZeroVector), FSimpleData());
+	//SpawnActorSingle(FTransform(FRotator::ZeroRotator, FVector::ZeroVector), FSimpleData());
+	//SpawnActorSingleDeferred(FTransform(FRotator::ZeroRotator, FVector::ZeroVector), FSimpleData());
 	SpawnActorsArray();
 }
 
@@ -68,7 +70,27 @@ void ASimpleSpawner::SpawnActorsArray()
 		if (!Actor) { continue; }
 
 		Actor->SetSimpleData(Payload.Data);
+		Actor->OnColorChanged.AddDynamic(this, &ThisClass::OnColorChanged);
+		Actor->OnTimerFinished.AddUObject(this, &ASimpleSpawner::OnTimerFinished);
 		Actor->FinishSpawning(Payload.InitialTransform);
 	}
+}
+
+void ASimpleSpawner::OnColorChanged(const FLinearColor& Color, const FString& Name)
+{
+	UE_LOG(LogSimpleSpawner, Warning, TEXT("Actor name: %s, Color %i"), *Name, *Color.ToString());
+}
+
+void ASimpleSpawner::OnTimerFinished(AActor* Actor)
+{
+	if (!Actor) { return; }
+	UE_LOG(LogSimpleSpawner, Error, TEXT("Timer finished: %s"), *Actor->GetName());
+
+	ABaseGeometryActor* SimpleActor = Cast<ABaseGeometryActor>(Actor);
+	if (!SimpleActor) { return; }
+	UE_LOG(LogSimpleSpawner, Error, TEXT(" \nSimple Data: %s"), *(SimpleActor->GetSimpleData().ToString()));
+
+	SimpleActor->Destroy();
+	//SimpleActor->SetLifeSpan(2.9f);
 }
 

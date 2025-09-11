@@ -38,6 +38,13 @@ void ABaseGeometryActor::BeginPlay()
 	//TransformLog();
 }
 
+void ABaseGeometryActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UE_LOG(LogBaseGeometry, Error, TEXT("Actor %s has been destroyed"), *GetName());
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("DESTROYED"));
+	Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void ABaseGeometryActor::Tick(float DeltaTime)
 {
@@ -155,12 +162,15 @@ void ABaseGeometryActor::OnTimerFired()
 	if (CurrentTimerCount++ < MaxTimerCount) {
 		const FLinearColor Color = FLinearColor::MakeRandomColor();
 		SetColor(Color);
+		OnColorChanged.Broadcast(Color, *GetName());
 
 		UE_LOG(LogBaseGeometry, Display, TEXT("Counter = %i; Color: %s"), CurrentTimerCount, *Color.ToString());
 	}
 	else
 	{
 		GetWorldTimerManager().ClearTimer(TimerHandle);
+		OnTimerFinished.Broadcast(this);
+
 		UE_LOG(LogBaseGeometry, Warning, TEXT("Timer has been stopped"));
 	}
 }
